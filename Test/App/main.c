@@ -31,8 +31,10 @@ char BD_SUM;  //保存接收到的校验和
 char GLJC[12]={'$','G','L','J','C',0x00,0x0C,0x00,0x2A};
 char DWSQ[22]={'$','D','W','S','Q',0x00,0x16,0x00,0x00,0x00,
                 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x23};
-char TXSQ[22]={'$','D','W','S','Q',0x00,0x16,0x00,0x00,0x00,
-                0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x23};
+char TXSQ[22]={'$','T','X','S','Q',0x00,0x1D,0x04,0x75,0x72,
+                0x46,0x04,0x75,0x72,0x00,0x58,0x00,0xA4,0x31,
+                0x32,0x33,0x61,0x62,0x63,0xD6,0xD0,0xB9,0xFA,
+                0x98};
 
 void readuart(char ch,char *str); 
 void BDProtocol(void);      //北斗协议转换函数
@@ -60,7 +62,7 @@ void uart3_handler(void)
     {
         //用户需要处理接收数据
         uart_getchar(UART3,&ch);
-        switch(ch)
+        switch(ch)   //功能选择
         {
           
             case '1':
@@ -71,6 +73,13 @@ void uart3_handler(void)
                 break;
             case '2':
                 str=DWSQ;
+                while(*str)
+                {
+                    uart_putchar(UART1, *str++);
+                }
+                break;
+             case '3':
+                str=TXSQ;
                 while(*str)
                 {
                     uart_putchar(UART1, *str++);
